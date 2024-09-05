@@ -1,58 +1,56 @@
-package Proyecto;
-
 public class Asistente {
-	private String idAsistente;
-	private String nombre;
-	private int edad;
-	private String email;
-	private boolean confirmacionAsistencia;;
-	
-	public Asistente(String idAsistente, String nombre, int edad, String email) {
-		//Inserte validaciones pertinentes
-		this.idAsistente = idAsistente;
-		this.nombre = nombre;
-		this.edad = edad;
-		this.email = email;
-	}
-	
-	public String getnombre() {
+    private String idAsistente;
+    private String nombre;
+    private int edad;
+    private String email;
+    private boolean confirmacionAsistencia;
+
+    public Asistente(String idAsistente, String nombre, int edad, String email) {
+        //Inserte validaciones pertinentes
+        this.idAsistente = idAsistente;
+        this.nombre = nombre;
+        this.edad = edad;
+        this.email = email;
+    }
+
+    public String getNombre() {
         return nombre;
     } 
 
-	public String getidAsistente() {
+    public String getidAsistente() {
         return idAsistente;
     }
 
-	public String getemail() {
+    public String getEmail() {
         return email;
     }  
 
-	public int getedad() {
+    public int getEdad() {
         return edad;
     }
 
-	public boolean getConfirmacionAsistencia() {
+    public boolean getConfirmacionAsistencia() {
         return confirmacionAsistencia;
     } 
 
-	public void setnombre(String nombre) {
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-	public void setidAsistente(String idAsistente) {
+    public void setidAsistente(String idAsistente) {
         this.idAsistente = idAsistente;
     }   
 
-	public void setemail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }  
 
 
-	public void setedad(int edad) {
+    public void setEdad(int edad) {
         this.edad = edad;
     }
 
-	public void setconfirmacionAsistencia(boolean confirmacionAsistencia) {
+    public void setConfirmacionAsistencia(boolean confirmacionAsistencia) {
         this.confirmacionAsistencia = confirmacionAsistencia;
     }
 }
