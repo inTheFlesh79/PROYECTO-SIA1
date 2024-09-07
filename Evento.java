@@ -1,3 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package ProyectoSIA1_SistemaVentasEntradaEventos;
+
+/**
+ *
+ * @author MSI
+ */
 import java.io.*;
 import java.util.ArrayList;
 
@@ -11,7 +21,7 @@ public class Evento{
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     // constructor Evento.
-    public Evento (String idRecinto, String nombre, String fecha, int id, String descripcion, String gO) {
+    public Evento (String idRecinto, String nombre, String fecha, String descripcion, String gO) {
         //inserte validaciones pertinentes
         nombreEvento = nombre;
         fechaEvento = fecha;
@@ -28,7 +38,7 @@ public class Evento{
         System.out.println("Ingrese ID del asistente");
         idAsistente = reader.readLine();
 
-        if (obtenerAsistente(arrayAsistentes, idAsistente) != null) { // verificar si el id está en el mapa
+        if (obtenerAsistente(arrayAsistentes, idAsistente) != null) { // verificar si el id estÃ¡ en el mapa
             System.out.println("ID YA SE ENCUENTRA REGISTRADA");
             return false; // no se agrego
         }
@@ -48,7 +58,6 @@ public class Evento{
         return true;
     } 
 
-    
     private Asistente obtenerAsistente(ArrayList<Asistente> lista, String id){
         int i;
         Asistente asisTMP;
@@ -63,7 +72,12 @@ public class Evento{
         
     }
 
-    public boolean eliminarAsistente(String idAsistente) {
+    public boolean eliminarAsistente(BufferedReader lector) throws IOException {
+        String idAsistente;
+        System.out.println("Ingrese el id del Asistente a eliminar: ");
+        idAsistente = lector.readLine();
+        
+        
         Asistente pepe =(Asistente) obtenerAsistente(arrayAsistentes, idAsistente);
     
         if (obtenerAsistente(arrayAsistentes, idAsistente) != null){
@@ -115,7 +129,7 @@ public class Evento{
         return nombreEvento;
     } 
 
-    public String getfechaEvento() {
+    public String getFechaEvento() {
         return fechaEvento;
     }   
 
@@ -129,13 +143,18 @@ public class Evento{
 
     public String getGrupoObjetivo() {
         return grupoObjetivo;
-    }  
+    }
+
+    public ArrayList<Asistente> getArrayAsistentes() {
+        return arrayAsistentes;
+    }
+
     // setters
-    public void setnombreEvento(String nombreEvento) {
+    public void setNombreEvento(String nombreEvento) {
         this.nombreEvento = nombreEvento;
     }
 
-    public void setfechaEvento(String fechaEvento) {
+    public void setFechaEvento(String fechaEvento) {
         this.fechaEvento = fechaEvento;
     }   
 

@@ -1,3 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package ProyectoSIA1_SistemaVentasEntradaEventos;
+
+/**
+ *
+ * @author MSI
+ */
 public class Asistente {
     private String idAsistente;
     private String nombre;
