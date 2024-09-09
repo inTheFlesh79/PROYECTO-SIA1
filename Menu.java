@@ -1,3 +1,16 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.proyectosia1_sistemaventaseminarios;
+
+/**
+ *
+ * Integrantes:
+ * Constanza Contreras
+ * Vicente Parada
+ * Raul Rozas
+ */
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -318,6 +331,33 @@ public class Menu {
         }
     }
 
+    private boolean modificarRecinto(BufferedReader lector, String newIdRecinto)throws IOException{
+        System.out.println("Ingrese el id del recinto que desea modificar: ");
+        String idRecinto = lector.readLine();
+
+        Recinto recintoTMP = (Recinto)obtenerRecinto(arrayRecintos, idRecinto);
+        if (recintoTMP != null){
+            String nombre, ubicacion;
+            int cupos;
+            System.out.println("Ingrese el nuevo nombre del recinto: ");
+            nombre = lector.readLine();
+            System.out.println("Ingrese la nueva ubicacion del recinto: ");
+            ubicacion = lector.readLine();
+            System.out.println("Ingrese nueva capacidad del Recinto: ");
+            cupos = Integer.parseInt(lector.readLine());
+
+            // setters de los parametros.
+            recintoTMP.setNombreRecinto(nombre);
+            recintoTMP.setUbicacion(ubicacion);
+            recintoTMP.setCupos(cupos);
+            recintoTMP.setIdRecinto(newIdRecinto);
+
+            return true; // se pudo modificar
+        }
+
+        return false;
+    }
+    
     private boolean modificarRecinto( BufferedReader lector)throws IOException{
         System.out.println("Ingrese el id del recinto que desea modificar: ");
         String idRecinto = lector.readLine();
@@ -495,10 +535,34 @@ public class Menu {
                         break;
                     case 2:
                         // Modificar Recinto
-                        if (modificarRecinto(lector) == true){
-                            System.out.println("[INFO]: recinto modificado correctamente");
-                        }else{
-                            System.out.println( "[ERROR]: no se pudo modificar el recinto");
+                        int check;
+                        while (true){
+                            System.out.println("Desea cambiar la ID del Recinto?");
+                            System.out.println("Ingrese 1 para cambiar. 0 para dejarla como esta.");
+                            check = Integer.parseInt(lector.readLine());
+
+                            if (check == 1){        
+                                String newId;
+                                System.out.println("Ingrese el nuevo ID del Recinto");
+                                newId = lector.readLine();
+                                if (modificarRecinto(lector, newId) == true){
+                                    System.out.println("[INFO]: recinto modificado correctamente");
+                                }else{
+                                    System.out.println( "[ERROR]: no se pudo modificar el recinto");
+                                }
+                                break;
+                            }
+                            else if (check == 0){
+                                if (modificarRecinto(lector) == true){
+                                    System.out.println("[INFO]: recinto modificado correctamente");
+                                }else{
+                                    System.out.println( "[ERROR]: no se pudo modificar el recinto");
+                                }
+                                break;
+                            }
+                            else {            
+                                System.out.println("ingrese de nuevo el valor");
+                            }
                         }
                         break;
                     case 3:

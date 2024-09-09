@@ -1,3 +1,16 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.proyectosia1_sistemaventaseminarios;
+
+/**
+ *
+ * Integrantes:
+ * Constanza Contreras
+ * Vicente Parada
+ * Raul Rozas
+ */
 import java.io.*;
 import java.util.ArrayList;
 
@@ -36,7 +49,7 @@ public class Evento{
         System.out.println("Ingrese ID del asistente");
         idAsistente = reader.readLine();
 
-        if (obtenerAsistente(arrayAsistentes, idAsistente) != null) { // verificar si el id está en el mapa
+        if (obtenerAsistente(arrayAsistentes, idAsistente) != null) { // verificar si el id estÃ¡ en el mapa
             System.out.println("ID YA SE ENCUENTRA REGISTRADA");
             return false; // no se agrego
         }
