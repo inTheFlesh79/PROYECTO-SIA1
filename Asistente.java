@@ -1,19 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package ProyectoSIA1_SistemaVentasEntradaEventos;
-
-/**
- *
- * @author MSI
- */
 public class Asistente {
     private String idAsistente;
     private String nombre;
     private int edad;
     private String email;
-    private boolean confirmacionAsistencia;
 
     public Asistente(String idAsistente, String nombre, int edad, String email) {
         //Inserte validaciones pertinentes
@@ -37,10 +26,6 @@ public class Asistente {
 
     public int getEdad() {
         return edad;
-    }
-
-    public boolean getConfirmacionAsistencia() {
-        return confirmacionAsistencia;
     } 
 
     public void setNombre(String nombre) {
@@ -55,12 +40,7 @@ public class Asistente {
         this.email = email;
     }  
 
-
     public void setEdad(int edad) {
         this.edad = edad;
-    }
-
-    public void setConfirmacionAsistencia(boolean confirmacionAsistencia) {
-        this.confirmacionAsistencia = confirmacionAsistencia;
     }
 }

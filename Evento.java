@@ -1,17 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package ProyectoSIA1_SistemaVentasEntradaEventos;
-
-/**
- *
- * @author MSI
- */
 import java.io.*;
 import java.util.ArrayList;
 
-public class Evento{
+public class Evento{ 
     private String nombreEvento;
     private String fechaEvento;
     private String idRecinto;
@@ -19,7 +9,7 @@ public class Evento{
     private String grupoObjetivo;
     private ArrayList<Asistente> arrayAsistentes = new ArrayList<Asistente>();
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
+    
     // constructor Evento.
     public Evento (String idRecinto, String nombre, String fecha, String descripcion, String gO) {
         //inserte validaciones pertinentes
@@ -29,6 +19,14 @@ public class Evento{
         this.descripcion = descripcion;
         grupoObjetivo = gO;
     }
+
+    public void inicializarAsistentes(){
+        Asistente asistente1 = new Asistente("123", "Alexis Sanchez", 18, "messi@gmail.com");
+        Asistente asistente2 = new Asistente("124", "Vicente VANcoco", 20, "viceVancoco@mail.pucv.cl");
+        arrayAsistentes.add(asistente1);
+        arrayAsistentes.add(asistente2);
+    }
+    
     /*Funcion que agrega un recinto y clave asociada*/
     public boolean agregarAsistente() throws IOException {
         //nota mental, meter todo lo I/O de esta funcion al menu
@@ -38,7 +36,7 @@ public class Evento{
         System.out.println("Ingrese ID del asistente");
         idAsistente = reader.readLine();
 
-        if (obtenerAsistente(arrayAsistentes, idAsistente) != null) { // verificar si el id estÃ¡ en el mapa
+        if (obtenerAsistente(arrayAsistentes, idAsistente) != null) { // verificar si el id está en el mapa
             System.out.println("ID YA SE ENCUENTRA REGISTRADA");
             return false; // no se agrego
         }
@@ -145,9 +143,6 @@ public class Evento{
         return grupoObjetivo;
     }
 
-    public ArrayList<Asistente> getArrayAsistentes() {
-        return arrayAsistentes;
-    }
 
     // setters
     public void setNombreEvento(String nombreEvento) {

@@ -1,13 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package ProyectoSIA1_SistemaVentasEntradaEventos;
-
-/**
- *
- * @author MSI
- */
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +10,31 @@ public class Menu {
     private ArrayList<Recinto> arrayRecintos = new ArrayList<Recinto>();
      // almacena una coleccion de claves String para luego iterarlas y mostrar los elementos del mapa 
 
+    private void inicializarEventosyAsistentes(){
+        Evento evento1 = new Evento(null, "Seminario de Psicologia Juvenil", "01/01/2022", "Repertorio de algoritmos", "Tercera Edad");
+        Evento evento2 = new Evento(null, "Charla POO", "02/01/2022", "clases y sus metodos", "Pregrado");
+        mapaEventos.put("1111", evento1);
+        mapaEventos.put("1112", evento2);
+        evento1.inicializarAsistentes();
+        evento2.inicializarAsistentes();
+    }
 
+    private void inicializarRecintos(){
+        Recinto recinto1 = new Recinto();
+        recinto1.setIdRecinto("0001");
+        recinto1.setNombreRecinto("Movistar Arena");
+        recinto1.setUbicacion("Av. Pedro Picapiedra #1, Valparaiso");
+        recinto1.setCupos(100);
+        arrayRecintos.add(recinto1);
+
+        Recinto recinto2 = new Recinto();
+        recinto2.setIdRecinto("0002");
+        recinto2.setNombreRecinto("IBC");
+        recinto2.setUbicacion("Av. Francia #403, Valparaiso");
+        recinto2.setCupos(50);
+        arrayRecintos.add(recinto2);
+    }
+    
     private void menuPrincipal() {
       System.out.println("**MENU PRINCIPAL**");
       System.out.println("1) Gestionar Eventos");
@@ -68,8 +82,8 @@ public class Menu {
 
 
     // metodos de evento
-    private boolean agregarEvento(BufferedReader lector) throws IOException{
-        String llave, nombreEvento, fechaEvento, descripcion, grupoObjetivo;
+    private boolean agregarEvento(BufferedReader lector, ArrayList<Recinto> arrayRecintos) throws IOException{
+        String llave, nombreEvento, fechaEvento, descripcion, grupoObjetivo, idRecinto;
         System.out.println("Ingrese el id del evento a agregar: ");
         llave = lector.readLine();
         Evento evento = mapaEventos.get(llave);
@@ -82,17 +96,43 @@ public class Menu {
 
         System.out.println("Ingrese el nombre del evento: ");
         nombreEvento = lector.readLine();
+
         System.out.println("Ingrese la fecha del evento: ");
         fechaEvento = lector.readLine();
+
         System.out.println("Ingrese una descripcion del evento: ");
         descripcion = lector.readLine();
+
         System.out.println("Ingrese el grupo objetivo del evento: ");
         grupoObjetivo = lector.readLine();
-        // se instancia al constructor
-        evento = new Evento(null, nombreEvento, fechaEvento, descripcion, grupoObjetivo);
+
+        //validaciones para verificar que el idRecinto a ingresar este asociado a un Recinto en la listaRecintos
+        while (true){
+            System.out.println("Ingrese el id del Recinto donde se realizara el evento: ");
+            idRecinto = lector.readLine();
+            //la lista Recintos esta VACIA
+            if (arrayRecintos.isEmpty()){
+                System.out.println("No existe ningun Recinto registrado en el sistema. Por favor, registre un recinto antes de continuar.");
+                agregarRecinto(lector, arrayRecintos, idRecinto);
+                evento = new Evento(idRecinto, nombreEvento, fechaEvento, descripcion, grupoObjetivo);
+                break;
+            }
+            else{
+                Recinto recintoTMP = new Recinto();
+                recintoTMP = obtenerRecinto(arrayRecintos, idRecinto);
+                //el Recinto existe
+                if (recintoTMP != null){
+                    evento = new Evento(idRecinto, nombreEvento, fechaEvento, descripcion, grupoObjetivo);
+                    break;
+                }
+                // el Recinto NO existe
+                else{ 
+                    System.out.println("ERROR: El Recinto ingresado no se encuentra registrado en el sistema");
+                }
+            }
+        }
         mapaEventos.put(llave, evento);
         return true;
-
     }
 
     private boolean eliminarEvento(BufferedReader lector) throws IOException {
@@ -103,20 +143,8 @@ public class Menu {
         Evento eventoTMP = mapaEventos.get(idEvento);
 
         if (eventoTMP != null) {
-            String idRecinto = eventoTMP.getidRecinto();
-            if (idRecinto != null) {
-                // Solo eliminar el recinto si el ID del recinto no es nulo
-                if (eliminarRecinto(idRecinto, idEvento)) {
-                    mapaEventos.remove(idEvento);
-                    return true; // Se eliminó correctamente el evento y el recinto
-                } else {
-                    return false; // No se pudo eliminar el recinto
-                }
-            } else {
-                // Si el evento no tiene recinto asociado, solo eliminar el evento
-                mapaEventos.remove(idEvento);
-                return true; // Se eliminó correctamente el evento
-            }
+            mapaEventos.remove(idEvento);
+            return true; // Se eliminó correctamente el evento
         }
         return false; // El evento no existe
     }
@@ -130,7 +158,7 @@ public class Menu {
             System.out.println("Evento: " + evento.getNombreEvento());
             System.out.println("Fecha: " + evento.getFechaEvento());
             idRecinto = evento.getidRecinto();
-            recintoTMP = ((Recinto) obtenerRecinto(arrayRecintos, idRecinto));
+            recintoTMP = obtenerRecinto(arrayRecintos, idRecinto);
             if (evento.getidRecinto() != null && recintoTMP != null) {
                 recintoTMP.getNombreRecinto();
                 System.out.println("Lugar: " + recintoTMP.getNombreRecinto() );
@@ -147,17 +175,41 @@ public class Menu {
         String idEvento;
         System.out.println("Ingres el id del evento a modificar: ");
         idEvento = lector.readLine();        
-        String nombre, fecha, ubicacion, descripcion, grupoObjetivo, idRecinto;
+        String nombre, fecha, descripcion, grupoObjetivo, idRecinto;
         Evento eventoTMP = (Evento) mapaEventos.get(idEvento);
         if (eventoTMP != null){
             System.out.println("Ingrese el nuevo nombre del evento: ");
             nombre = lector.readLine();
-            System.out.println("Ingrese el nuevo id de recinto: ");
-            idRecinto = lector.readLine();
+
+            while (true){
+                System.out.println("Ingrese el Recinto donde se realizara el evento: ");
+                idRecinto = lector.readLine();
+                //la lista Recintos esta VACIA
+                if (arrayRecintos.isEmpty()){
+                    System.out.println("No existe ningun Recinto registrado en el sistema. Por favor, registre un recinto antes de continuar.");
+                    agregarRecinto(lector, arrayRecintos, idRecinto);
+                    break;
+                }
+                else{
+                    Recinto recintoTMP = new Recinto();
+                    recintoTMP = obtenerRecinto(arrayRecintos, idRecinto);
+                    
+                    //el Recinto existe
+                    if (recintoTMP != null){
+                        break;
+                    }
+                    // el Recinto NO existe
+                    else{ 
+                        System.out.println("ERROR: El Recinto ingresado no se encuentra registrado en el sistema");
+                    }
+                }
+            }
             System.out.println("Ingrese la nueva fecha del evento: ");
             fecha = lector.readLine();
+
             System.out.println("Ingrese la nueva descripcion del evento: ");
             descripcion = lector.readLine();
+
             System.out.println("Ingrese el grupo Objetivo (Charla/Seminario) del evento: ");
             grupoObjetivo = lector.readLine();
 
@@ -177,50 +229,77 @@ public class Menu {
 
     // metodos de Array Recintos
 
-    private boolean agregarRecinto(BufferedReader lector) throws IOException {
-        System.out.println("Ingrese el id del evento al que desea agregar un recinto: ");
-        String idEvento = lector.readLine();
-        Evento eventoTMP = mapaEventos.get(idEvento);
+    //AGREGAR RECINTO #1
+    private boolean agregarRecinto(BufferedReader lector, ArrayList<Recinto> arrayRecintos) throws IOException {
+        Recinto recintoTMP = new Recinto();
 
-        if (eventoTMP != null && eventoTMP.getidRecinto() == null) { 
-            Recinto recintoTMP = new Recinto(null, null, null, 0);
-            System.out.println("Ingrese el nombre del recinto: ");
-            recintoTMP.setNombreRecinto(lector.readLine());
-            System.out.println("Ingrese la ubicacion del recinto: ");
-            recintoTMP.setUbicacion(lector.readLine());
-            System.out.println("Ingrese la capacidad del recinto: ");
-            recintoTMP.setCupos(Integer.parseInt(lector.readLine()));
+        while (true){
             System.out.println("Ingrese el id del recinto: ");
             String idRecinto = lector.readLine();
-            recintoTMP.setIdRecinto(idRecinto);
-
-            // Agregar recinto al ArrayList
-            arrayRecintos.add(recintoTMP);
-
-            // Asignar id del recinto al evento
-            eventoTMP.setidRecinto(idRecinto);
-            return true;
+            if (obtenerRecinto(arrayRecintos, idRecinto) == null){
+                recintoTMP.setIdRecinto(idRecinto);
+                break;
+            }
+            else{
+                System.out.println("ERROR: El id ingresado ya esta asociado a un Recinto.");
+                return false;
+            }
         }
+
+        System.out.println("Ingrese el nombre del recinto: ");
+        recintoTMP.setNombreRecinto(lector.readLine());
+
+        System.out.println("Ingrese la ubicacion del recinto: ");
+        recintoTMP.setUbicacion(lector.readLine());
+
+        System.out.println("Ingrese la capacidad del recinto: ");
+        recintoTMP.setCupos(Integer.parseInt(lector.readLine()));
+
+        // Agregar recinto al ArrayList
+        arrayRecintos.add(recintoTMP);
+
+        return true;
+    }
+
+    // AGREGAR RECINTO #2
+    private boolean agregarRecinto(BufferedReader lector, ArrayList<Recinto> arrayRecintos, String idRecinto) throws IOException {
+        Recinto recintoTMP = new Recinto();
+
+        System.out.println("Ingrese el nombre del recinto: ");
+        recintoTMP.setNombreRecinto(lector.readLine());
+
+        System.out.println("Ingrese la ubicacion del recinto: ");
+        recintoTMP.setUbicacion(lector.readLine());
+
+        System.out.println("Ingrese la capacidad del recinto: ");
+        recintoTMP.setCupos(Integer.parseInt(lector.readLine()));
+
+        System.out.println("Ingrese el id del recinto: ");
+        recintoTMP.setIdRecinto(idRecinto);
+
+        // Agregar recinto al ArrayList
+        arrayRecintos.add(recintoTMP);
 
         return false;
     }
 
-    private boolean eliminarRecinto(String idRecintoEliminar, String idEvento){
-        Evento eventoTMP = (Evento) mapaEventos.get(idEvento);
-        Recinto recintoTMP = (Recinto)obtenerRecinto(arrayRecintos, idRecintoEliminar);
-        if (eventoTMP != null && recintoTMP != null){
-            eventoTMP.setidRecinto(null);
-            arrayRecintos.remove(recintoTMP);
-            return true;
+    private boolean eliminarRecinto(String idRecintoEliminar, ArrayList<Recinto> arrayRecintos) {
+    if (arrayRecintos != null && !arrayRecintos.isEmpty()) {
+        for (Recinto recintoTMP : arrayRecintos) {
+            String idRecintoTMP = recintoTMP.getIdRecinto();
+            if (idRecintoTMP.equals(idRecintoEliminar)) {  // Assuming getIdRecinto() returns String
+                arrayRecintos.remove(recintoTMP);
+                return true;
+            }
         }
-
-        return false;
     }
+    return false;
+}
 
-    private Object obtenerRecinto(ArrayList<Recinto> array, String idRecinto){
+    private Recinto obtenerRecinto(ArrayList<Recinto> array, String idRecinto){
         int i;
         for (i = 0; i < array.size(); i++){
-            if ( ((Recinto) array.get(i)).getIdRecinto().equals(idRecinto) ){
+            if (array.get(i).getIdRecinto().equals(idRecinto) ){
                 return array.get(i);
             }
         }
@@ -246,17 +325,18 @@ public class Menu {
         Recinto recintoTMP = (Recinto)obtenerRecinto(arrayRecintos, idRecinto);
         if (recintoTMP != null){
             String nombre, ubicacion;
+            int cupos;
             System.out.println("Ingrese el nuevo nombre del recinto: ");
             nombre = lector.readLine();
             System.out.println("Ingrese la nueva ubicacion del recinto: ");
             ubicacion = lector.readLine();
-            System.out.println("Ingrese el nuevo id del recinto: ");
-            idRecinto = lector.readLine();
+            System.out.println("Ingrese nueva capacidad del Recinto: ");
+            cupos = Integer.parseInt(lector.readLine());
 
             // setters de los parametros.
             recintoTMP.setNombreRecinto(nombre);
             recintoTMP.setUbicacion(ubicacion);
-            recintoTMP.setIdRecinto(idRecinto);
+            recintoTMP.setCupos(cupos);
 
             return true; // se pudo modificar
         }
@@ -271,7 +351,10 @@ public class Menu {
         String idEvento, idRecinto, idAsistente;
         Evento eventoTMP;
         int opcion = 0, opcionB, opcionC, opcionD;
-        ArrayList<Asistente> arrayAsistentes;
+        
+        inicializarEventosyAsistentes();
+        inicializarRecintos();
+        
         System.out.println("**ADMINISTRADOR DE EVENTOS v1.0**\n");
 
         while (flag) {
@@ -285,7 +368,7 @@ public class Menu {
                 switch (opcionB) {
                 case 1:
                   // Agregar nuevo Evento
-                    status = agregarEvento(lector);
+                    status = agregarEvento(lector, arrayRecintos);
                     if (status == true){
                         System.out.println("[INFO]: evento agregado correctamente");
                     }else{
@@ -344,7 +427,7 @@ public class Menu {
                             idEvento = lector.readLine();
                             eventoTMP = mapaEventos.get(idEvento);
                             if(eventoTMP != null){
-                                arrayAsistentes = eventoTMP.getArrayAsistentes();
+                                
                                 // solciitar el id del asistente a modificar.
                                 System.out.println("Ingrese el id del asistente a modificar: " );
                                 idAsistente = lector.readLine();
@@ -356,8 +439,8 @@ public class Menu {
                             }else{
                                 System.out.println("[ERROR] No se pudo modificar el asistente");
                             }
-                                
-                            
+
+
 
                             break;
                         case 3:
@@ -404,7 +487,7 @@ public class Menu {
                 switch (opcionD) {
                     case 1:
                         // Agregar nuevo Recinto
-                        if (agregarRecinto(lector) == true){
+                        if (agregarRecinto(lector, arrayRecintos) == true){
                             System.out.println("[INFO]: recinto agregado correctamente");
                         }else{
                             System.out.println("[ERROR]: no se pudo agregar el recinto");
@@ -420,11 +503,9 @@ public class Menu {
                         break;
                     case 3:
                         // Eliminar Recinto
-                        System.out.println("Ingrese el id del Evento que desea eliminar su recinto: ");
-                        idEvento = lector.readLine();
                         System.out.println("Ingrese el id del recinto que desea eliminar: ");
                         idRecinto = lector.readLine();
-                        if (eliminarRecinto(idRecinto, idEvento) == true){
+                        if (eliminarRecinto(idRecinto, arrayRecintos) == true){
                             System.out.println("[INFO]: recinto eliminado correctamente");
                         }else{
                             System.out.println("[ERROR]: no se pudo eliminar el recinto");
@@ -432,6 +513,9 @@ public class Menu {
                         break;
                     case 4:
                         // Mostrar Recinto
+                        if (arrayRecintos.isEmpty()){
+                            System.out.println("No existen Recintos registrados en el sistema");
+                        }
                         mostrarRecintos();
                         break;
                     case 5:
